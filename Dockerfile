@@ -16,5 +16,6 @@ WORKDIR /app
 ## Copy compiled files
 COPY --from=build /app /app
 
-COPY ./entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+## Set entrypoint
+ENTRYPOINT ["/app/ProjectManagementCMS_Blazor"]
+
