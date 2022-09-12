@@ -5,9 +5,6 @@ WORKDIR /source
 ## Copy sources
 COPY . /source
 
-## Exchange appconfigs
-RUN mv /source/appsettings.json.release /source/appsettings.json
-
 ## Build
 RUN dotnet restore --use-current-runtime
 RUN dotnet publish -c Release -o /app --use-current-runtime --self-contained false --no-restore
