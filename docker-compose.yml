@@ -5,6 +5,10 @@ services:
     ports:
       - "8081:80"
     restart: unless-stopped
+  
+  db_migrations:
+    build: Migrations/
+    restart: unless-stopped
 
   db:
     image: mariadb
