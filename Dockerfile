@@ -1,6 +1,5 @@
 # Build Image
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-FROM mcr.microsoft.com/dotnet/sdk:7.0
 WORKDIR /source
 
 ## Copy sources
@@ -19,3 +18,4 @@ COPY --from=build /app /app
 
 ## Set entrypoint
 ENTRYPOINT ["/app/ProjectManagementCMS_Blazor"]
+
