@@ -1,21 +1,20 @@
 # Build Image
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0
 WORKDIR /source
 
 ## Copy sources
 COPY . /source
 
-## Build
-RUN dotnet restore --use-current-runtime
-RUN dotnet publish -c Release -o /app --use-current-runtime --self-contained false --no-restore
+## Install EF tools
+RUN dotnet tool install --global dotnet-ef
 
-# Final Image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
-WORKDIR /app
+RUN echo '\
+#!/bin/sh\n\
+echo "Sleeping 10s before attempting DB migration ..."\n\
+sleep 10\n\
+\n\
+echo "Attempting DB migration ..."\n\
+/root/.dotnet/tools/dotnet-ef database update --verbose --project /source\n\
+echo "Done! (Exit-Code: $?)"\n' > /entrypoint.sh && chmod +x /entrypoint.sh
 
-## Copy compiled files
-COPY --from=build /app /app
-
-## Set entrypoint
-ENTRYPOINT ["/app/ProjectManagementCMS_Blazor"]
-
+ENTRYPOINT ["sh", "-c", "/entrypoint.sh"]
